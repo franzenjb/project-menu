@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: #d32f2f;
+            color: white;
+            padding: 16px 20px;
+            margin: -20px -20px 20px -20px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .project {
+            background: white;
+            border-left: 4px solid #c62828;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .project-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #c62828;
+            margin-bottom: 8px;
+        }
+
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .label {
+            font-weight: 500;
+            color: #999;
+            min-width: 60px;
+        }
+
+        .value {
+            color: #333;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #e0e0e0;
+            text-decoration: none;
+        }
+
+        .notes {
+            margin-top: 10px;
+            padding: 8px;
+            background: #fffbf0;
+            border-left: 3px solid #ffc107;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📁 Active Projects</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="project">
+            <div class="project-name">PDF Viewer</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/pdf-viewer</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Live:</span>
+                    <a href="https://pdf-viewer-one-phi.vercel.app" target="_blank">pdf-viewer-one-phi.vercel.app</a>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/pdf-viewer')">Copy cd command</button>
+                <button class="btn" onclick="copyToClipboard('cd ~/pdf-viewer && vercel --prod')">Copy deploy command</button>
+            </div>
+            <div class="notes">
+                Display disaster briefing PDFs. To update: copy new PDF to folder, edit index.html line 128, deploy to Vercel.
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">SC Ice Storm News</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/sc-ice-storm-news</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Live:</span>
+                    <a href="https://sc-ice-storm-news.vercel.app" target="_blank">sc-ice-storm-news.vercel.app</a>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/sc-ice-storm-news')">Copy cd command</button>
+                <button class="btn" onclick="copyToClipboard('cd ~/sc-ice-storm-news && python3 generate_news_pdf.py')">Copy PDF gen command</button>
+            </div>
+            <div class="notes">
+                SC disaster news monitoring. Run generate_news_pdf.py to create updated PDF with latest news articles.
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">SC Feeding Operations</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/sc-feeding-operations</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Live:</span>
+                    <span class="value">-</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/sc-feeding-operations')">Copy cd command</button>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">County Consolidation Tool</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/county-consolidation-tool</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/county-consolidation-tool')">Copy cd command</button>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">Disaster Brief Generator</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/disaster-brief-generator</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/disaster-brief-generator')">Copy cd command</button>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">TN Power Tracker</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/tn-power-tracker</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/tn-power-tracker')">Copy cd command</button>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">ERV Trip Mapper</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/erv-trip-mapper</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/erv-trip-mapper')">Copy cd command</button>
+            </div>
+        </div>
+
+        <div class="project">
+            <div class="project-name">ArcGIS Metadata Automation</div>
+            <div class="project-info">
+                <div class="info-row">
+                    <span class="label">Path:</span>
+                    <span class="value">~/arcgis-metadata-automation</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="copyToClipboard('cd ~/arcgis-metadata-automation')">Copy cd command</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Project Menu • Updated 2026-01-29
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show brief feedback
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.style.background = '#4caf50';
+                btn.style.color = 'white';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
