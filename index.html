@@ -131,16 +131,95 @@
             color: #999;
             font-size: 11px;
         }
+
+        /* Star Rating System */
+        .star-rating {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+
+        .star {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ddd;
+            transition: color 0.15s;
+        }
+
+        .star:hover,
+        .star.hovered {
+            color: #ffc107;
+        }
+
+        .star.filled {
+            color: #ffc107;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        .project.hidden {
+            display: none;
+        }
+
+        .project-count {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-left: auto;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>📁 Active Projects</h1>
+        <div class="filter-bar">
+            <label>Filter by rating:</label>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="5">★★★★★</button>
+            <button class="filter-btn" data-filter="4">★★★★+</button>
+            <button class="filter-btn" data-filter="3">★★★+</button>
+            <button class="filter-btn" data-filter="1">Rated</button>
+            <button class="filter-btn" data-filter="0">Unrated</button>
+            <span class="project-count" id="projectCount"></span>
+        </div>
     </div>
 
     <div class="container">
 
-        <div class="project">
+        <div class="project" data-project="utility-verifier">
+            <div class="star-rating"></div>
             <div class="project-name">Utility Outage Map Verifier</div>
             <div class="project-info">
                 <div class="info-row">
@@ -166,7 +245,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="pdf-viewer">
+            <div class="star-rating"></div>
             <div class="project-name">PDF Viewer</div>
             <div class="project-info">
                 <div class="info-row">
@@ -187,7 +267,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="sc-ice-storm-news">
+            <div class="star-rating"></div>
             <div class="project-name">SC Ice Storm News</div>
             <div class="project-info">
                 <div class="info-row">
@@ -208,7 +289,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="sc-feeding-operations">
+            <div class="star-rating"></div>
             <div class="project-name">SC Feeding Operations</div>
             <div class="project-info">
                 <div class="info-row">
@@ -225,7 +307,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="county-consolidation-tool">
+            <div class="star-rating"></div>
             <div class="project-name">County Consolidation Tool</div>
             <div class="project-info">
                 <div class="info-row">
@@ -238,7 +321,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="disaster-brief-generator">
+            <div class="star-rating"></div>
             <div class="project-name">Disaster Brief Generator</div>
             <div class="project-info">
                 <div class="info-row">
@@ -251,7 +335,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="tn-power-tracker">
+            <div class="star-rating"></div>
             <div class="project-name">TN Power Tracker</div>
             <div class="project-info">
                 <div class="info-row">
@@ -264,7 +349,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="erv-trip-mapper">
+            <div class="star-rating"></div>
             <div class="project-name">ERV Trip Mapper</div>
             <div class="project-info">
                 <div class="info-row">
@@ -277,7 +363,8 @@
             </div>
         </div>
 
-        <div class="project">
+        <div class="project" data-project="arcgis-metadata-automation">
+            <div class="star-rating"></div>
             <div class="project-name">ArcGIS Metadata Automation</div>
             <div class="project-info">
                 <div class="info-row">
@@ -297,9 +384,106 @@
     </div>
 
     <script>
+        // Star Rating System
+        const STORAGE_KEY = 'projectRatings';
+        let currentFilter = 'all';
+
+        function getRatings() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        }
+
+        function saveRating(projectId, rating) {
+            const ratings = getRatings();
+            ratings[projectId] = rating;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(ratings));
+        }
+
+        function renderStars(container, projectId, currentRating) {
+            container.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('span');
+                star.className = 'star' + (i <= currentRating ? ' filled' : '');
+                star.textContent = '★';
+                star.dataset.value = i;
+
+                star.addEventListener('click', () => {
+                    // Toggle off if clicking same rating
+                    const newRating = (i === currentRating) ? 0 : i;
+                    saveRating(projectId, newRating);
+                    renderStars(container, projectId, newRating);
+                    container.closest('.project').dataset.rating = newRating;
+                    applyFilter();
+                });
+
+                star.addEventListener('mouseenter', () => {
+                    container.querySelectorAll('.star').forEach((s, idx) => {
+                        s.classList.toggle('hovered', idx < i);
+                    });
+                });
+
+                star.addEventListener('mouseleave', () => {
+                    container.querySelectorAll('.star').forEach(s => s.classList.remove('hovered'));
+                });
+
+                container.appendChild(star);
+            }
+        }
+
+        function initStars() {
+            const ratings = getRatings();
+            document.querySelectorAll('.project').forEach(project => {
+                const projectId = project.dataset.project;
+                const rating = ratings[projectId] || 0;
+                project.dataset.rating = rating;
+                const container = project.querySelector('.star-rating');
+                if (container) {
+                    renderStars(container, projectId, rating);
+                }
+            });
+        }
+
+        function applyFilter() {
+            const projects = document.querySelectorAll('.project');
+            let visibleCount = 0;
+
+            projects.forEach(project => {
+                const rating = parseInt(project.dataset.rating) || 0;
+                let show = false;
+
+                if (currentFilter === 'all') {
+                    show = true;
+                } else if (currentFilter === '0') {
+                    show = rating === 0;
+                } else if (currentFilter === '1') {
+                    show = rating > 0;
+                } else {
+                    show = rating >= parseInt(currentFilter);
+                }
+
+                project.classList.toggle('hidden', !show);
+                if (show) visibleCount++;
+            });
+
+            document.getElementById('projectCount').textContent =
+                `${visibleCount} of ${projects.length}`;
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                applyFilter();
+            });
+        });
+
+        // Initialize
+        initStars();
+        applyFilter();
+
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                // Show brief feedback
                 const btn = event.target;
                 const originalText = btn.textContent;
                 btn.textContent = '✓ Copied!';
